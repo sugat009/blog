@@ -1,0 +1,116 @@
+{% load staticfiles %}
+{% load check %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Another Blog</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css"/>
+    <link rel="icon" href="{% static 'frontend/images/download.png' %}" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+
+    <style media="screen">
+        .like:hover {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'posts:home' %}">Another Blog</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'posts:home' %}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Actions
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'posts:post_create' %}">Create Post</a>
+                        <a class="dropdown-item" href="{% url 'posts:post_list' request.user.id %}">My Posts</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+</header>
+{% block maincontent %}
+    <main>
+        <div class="container">
+            <div class="mt-5">
+                <div class="row">
+                    {% for post in object_list %}
+                        <div class="col-md-4">
+                            <div class="card mt-3 mb-3">
+                                {% if post.image %}
+                                    <img class="card-img-top" src="{{ post.image.url }}" alt="Card image cap">
+                                {% endif %}
+                                <div class="card-body">
+                                    <a href="{% url 'posts:post_detail' post.id %}">
+                                        <h2>{{ post.title }}</h2>
+                                    </a>
+                                    <p class="card-text text-muted">{{ post.author }}</p>
+                                    <p class="card-text">{{ post.content|safe|truncatechars:"111" }}</p>
+                                    <i class="fa{% check_like post request.user.id %} fa-thumbs-up like"
+                                       data-id="{{ post.id }}" id="{{ post.id }}">{{ post.liked_users.count }}</i>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock maincontent %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.min.js" charset="utf-8"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.0/jquery.matchHeight-min.js"></script>
+{% block script %}
+    <script type="text/javascript">
+        $(".like").click(function () {
+            console.log("inside");
+            var postId = $(this).data("id");
+            $.post(
+                "{% url 'posts:like_post' %}", {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'post_id': postId,
+                    'user': "{{request.user.id}}"
+                },
+                function (data, status) {
+                    if (data['msg'] === "success") {
+                        if (data['status'] === "liked") {
+                            $("#" + postId).removeClass("far");
+                            $("#" + postId).addClass("fas");
+                        } else {
+                            $("#" + postId).removeClass("fas");
+                            $("#" + postId).addClass("far");
+                        }
+                    }
+                }
+            )
+        });
+        $(function () {
+            $('.card').matchHeight();
+        });
+    </script>
+{% endblock script %}
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+{% load humanize %}
+{% load check %}
+
+{% block maincontent %}
+<main class="mt-5">
+  <div class="container">
+    <div class="card mb-3">
+      {% if object.image %}
+      <img class="card-img-top" src="{{object.image.url}}" alt="Card image cap">
+      {% endif %}
+      <div class="card-body">
+        <h2 class="card-title">{{ object.title }}</h2>
+        <p class="card-text">{{ object.content|safe }}</p>
+        <p class="card-text"><small class="text-muted">{{ object.created_at|naturaltime }}</small></p>
+        <i class="fa{% check_like object request.user.id %} fa-thumbs-up like" data-id="{{object.id}}" id="{{object.id}}"></i>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock maincontent %}

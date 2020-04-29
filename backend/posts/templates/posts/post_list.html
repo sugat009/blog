@@ -1,0 +1,27 @@
+{% extends 'index.html' %}
+
+{% block maincontent %}
+<main>
+  <div class="container">
+    <div class="mt-5">
+      {% for post in object_list %}
+      <div class="card mt-3">
+        <div class="card-header">
+          {{post.author}}
+          <a href="{% url 'posts:post_update' post.id %}"><i class="fas fa-edit float-right"></i></a>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ post.title }}</h5>
+          <p class="card-text">{{ post.content|safe|truncatechars:"50" }}</p>
+          {{ post.liked_users.all.count }}&nbsp; &nbsp;<i class="far fa-thumbs-up"></i><br><br>
+          <a href="{% url 'posts:post_detail' post.id %}" class="btn btn-primary">View</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</main>
+{% endblock maincontent %}
+
+{% block script %}
+{% endblock %}
