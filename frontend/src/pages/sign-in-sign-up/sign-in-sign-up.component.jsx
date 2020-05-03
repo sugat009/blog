@@ -1,10 +1,12 @@
 import React from 'react';
 
+import SignInComponent from "../../components/sign-in/sign-in.component";
+
 const SignInSignUpComponent = () => {
     return (
-        <div>
-            <h2>Sign in component setup done;</h2>
-        </div>
+        <React.Fragment>
+            <SignInComponent />
+        </React.Fragment>
     );
 };
 
