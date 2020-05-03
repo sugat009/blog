@@ -33,12 +33,13 @@ function App() {
                             path="/profile"
                             component={Profile}
                         />
+                        {/* This route is for nested routing */}
+                        {/* When using nested routing never use exact */}
                         <Route
                             path="/blogs"
                             component={BlogComponent}
                         />
                         <Route
-                            exact
                             path="/signin"
                             render={() => currentUser ? (
                                 <Redirect to="/"/>
