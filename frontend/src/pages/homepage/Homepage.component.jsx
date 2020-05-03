@@ -4,13 +4,13 @@ import PostsComponent from "../../components/posts-component/posts.component";
 
 const HomepageComponent = () => {
     return (
-        <div>
+        <React.Fragment>
             <div className="container">
                 <PostsComponent postType="Top Posts"/>
                 <hr/>
                 <PostsComponent postType="Newest Posts"/>
             </div>
-        </div>
+        </React.Fragment>
     );
 };
 
