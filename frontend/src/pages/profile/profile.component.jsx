@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 
+import UserProfileComponent from "../../components/user-profile/user-profile.component";
+
 class Profile extends Component {
     render() {
         return (
-            <div>
-                <h2>User profile page</h2>
-            </div>
+            <React.Fragment>
+                <UserProfileComponent />
+            </React.Fragment>
         );
     }
 }

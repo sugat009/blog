@@ -1,9 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link} from "react-router-dom";
+import {withRouter} from "react-router";
 import {Button, Form, FormControl, Nav, Navbar, NavDropdown} from "react-bootstrap";
 
-const Header = () => {
+const Header = ({ history }) => {
     const currentUser = null;
+    const [searchText, setSearchText] = useState("");
+
+    const handleSubmit = event => {
+        event.preventDefault();
+        setSearchText("");
+        history.push("/search-result");
+    }
+
+    const handleChange = event => {
+        const {value} = event.target;
+
+        setSearchText(value);
+    }
 
     return (
         <div>
@@ -16,11 +30,13 @@ const Header = () => {
                     <Link className="navbar-brand" to="/">My Blog</Link>
                     <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                     <Navbar.Collapse id="basic-navbar-nav">
-                        <Form inline>
+                        <Form inline onSubmit={handleSubmit}>
                             <FormControl
                                 type="text"
                                 placeholder="Search"
                                 className="mr-sm-2"
+                                onChange={handleChange}
+                                value={searchText}
                             />
                             <Button variant="outline-success">Search</Button>
                         </Form>
@@ -73,4 +89,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default withRouter(Header);
