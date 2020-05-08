@@ -13,6 +13,7 @@ const Homepage = lazy(() => import("./pages/homepage/Homepage.component"));
 const SignInSignUp = lazy(() => import("./pages/sign-in-sign-up/sign-in-sign-up.component"));
 const Profile = lazy(() => import("./pages/profile/profile.component"));
 const BlogComponent = lazy(() => import("./pages/blog/blog.component"));
+const SearchPage = lazy(() => import("./pages/search-page/search-page.component"));
 
 function App() {
     const currentUser = null;
@@ -31,7 +32,11 @@ function App() {
                         <Route
                             exact
                             path="/profile"
-                            component={Profile}
+                            render={() => currentUser ? (
+                                <Profile/>
+                            ) : (
+                                <SignInSignUp/>
+                            )}
                         />
                         {/* This route is for nested routing */}
                         {/* When using nested routing never use exact */}
@@ -46,6 +51,10 @@ function App() {
                             ) : (
                                 <SignInSignUp/>
                             )}
+                        />
+                        <Route
+                            path="/search-result"
+                            component={SearchPage}
                         />
                     </Suspense>
                 </ErrorBoundary>
