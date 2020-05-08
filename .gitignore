@@ -85,3 +85,5 @@ config.json
 db.sqlite3
 
 migrations/
+
+settings.py
