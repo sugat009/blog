@@ -1,15 +1,14 @@
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-
+from posts.models import *
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from posts.models import *
-
 
 class CustomAuthTokenSerializer(serializers.Serializer):
-    username = serializers.CharField(label=_("Username"), style={'input_type': 'username/email'})
+    username = serializers.CharField(label="Username", style={
+        'input_type': 'username/email'})
     password = serializers.CharField(
         label=_("Password"),
         style={'input_type': 'password'},
@@ -19,21 +18,21 @@ class CustomAuthTokenSerializer(serializers.Serializer):
     def validate(self, attrs):
         username = attrs.get('username')
         password = attrs.get('password')
-        if (username) and password:
+        if username and password:
             user = None
             if username:
                 user = authenticate(request=self.context.get('request'),
-                                username=username, password=password)
+                                    username=username, password=password)
             if not user:
                 temp_user = User.objects.filter(email=username).first()
                 if temp_user:
                     user = authenticate(request=self.context.get('request'),
-                                    username=temp_user.username, password=password)
+                                        username=temp_user.username, password=password)
             if not user or not user.is_active:
-                msg = _('Unable to log in with provided credentials.')
+                msg = 'Unable to log in with provided credentials.'
                 raise serializers.ValidationError(msg, code='authorization')
         else:
-            msg = _('Must include "username" or "email" and "password".')
+            msg = 'Must include "username" or "email" and "password".'
             raise serializers.ValidationError(msg, code='authorization')
 
         attrs['user'] = user
@@ -58,7 +57,7 @@ class PostsSerializer(serializers.ModelSerializer):
             "updated_at",
             "deleted_at",
             "liked_users",
-            )
+        )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -69,7 +68,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "email",  "post_user",]
+        fields = ["id", "username", "email", "post_user", ]
 
     def get_id(self, user):
         return user.id if user.id else None
@@ -77,17 +76,19 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=6)
-    email = serializers.EmailField(required = True, validators = [UniqueValidator(queryset=User.objects.all())])
-    username = serializers.CharField(validators = [UniqueValidator(queryset=User.objects.all())])
+    email = serializers.EmailField(required=True, validators=[
+        UniqueValidator(queryset=User.objects.all())])
+    username = serializers.CharField(
+        validators=[UniqueValidator(queryset=User.objects.all())])
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "password",]
+        fields = ["id", "username", "email", "password", ]
 
     def create(self, validated_data):
         user = User.objects.create(
-            username = validated_data['username'],
-            email = validated_data['email']
+            username=validated_data['username'],
+            email=validated_data['email']
         )
         user.set_password(validated_data['password'])
         user.save()

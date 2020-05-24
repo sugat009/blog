@@ -1,0 +1,5 @@
+export const SignInSignUpTypes = {
+    TOGGLE_SIGNUP: "TOGGLE_SIGNUP",
+    TOGGLE_SIGNIN: "TOGGLE_SIGNIN",
+    TOGGLE_RESET_PWD: "TOGGLE_RESET_PWD"
+};

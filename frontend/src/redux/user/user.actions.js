@@ -1,7 +1,7 @@
 import UserActionTypes from "./user.types";
 
-export const googleSignInStart = () => ({
-    type: UserActionTypes.GOOGLE_SIGN_IN_START
+export const socialSignInStart = () => ({
+    type: UserActionTypes.SOCIAL_SIGN_IN_START
 });
 
 export const signInSuccess = (user) => ({
@@ -41,9 +41,9 @@ export const signUpStart = (userCredentials) => ({
     payload: userCredentials
 });
 
-export const signUpSuccess = ({user, additionalData}) => ({
+export const signUpSuccess = (user) => ({
     type: UserActionTypes.SIGN_UP_SUCCESS,
-    payload: {user, additionalData}
+    payload: user
 });
 
 export const signUpFailure = (error) => ({

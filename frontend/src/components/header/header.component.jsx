@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
+import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {withRouter} from "react-router";
 import {Button, Form, FormControl, Nav, Navbar, NavDropdown} from "react-bootstrap";
+import {createStructuredSelector} from "reselect";
 
-const Header = ({ history }) => {
-    const currentUser = null;
+import {selectCurrentUser} from "../../redux/user/user.selectors";
+
+const Header = ({ history, currentUser }) => {
     const [searchText, setSearchText] = useState("");
 
     const handleSubmit = event => {
@@ -89,4 +92,8 @@ const Header = ({ history }) => {
     );
 };
 
-export default withRouter(Header);
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser
+})
+
+export default withRouter(connect(mapStateToProps)(Header));
